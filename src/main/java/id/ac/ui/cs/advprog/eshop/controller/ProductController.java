@@ -67,6 +67,18 @@ public class ProductController {
         return "redirect:/product/list";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable( value = "id", required=false) String id, RedirectAttributes redirectAttributes) {
+        Product existingProduct = service.findById(id);
+        if (existingProduct == null) {
+            redirectAttributes.addFlashAttribute("error", "Product not found");
+            return "redirect:/product/list";
+        }
+
+        service.deleteById(id);
+        return "redirect:/product/list";
+    }
+
     @GetMapping("/list")
     public String productListPage(@RequestParam(value="error", required=false) String error, Model model) {
         List<Product> allProducts =  service.findAll();
