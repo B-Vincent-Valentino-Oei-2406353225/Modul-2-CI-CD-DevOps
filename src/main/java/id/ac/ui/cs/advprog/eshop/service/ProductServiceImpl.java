@@ -42,4 +42,9 @@ public class ProductServiceImpl implements ProductService {
         }
         return existingProduct;
     }
+
+    @Override
+    public void deleteById(String id) {
+        productRepository.deleteById(id);
+    }
 }
