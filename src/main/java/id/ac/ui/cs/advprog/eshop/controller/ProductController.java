@@ -30,7 +30,7 @@ public class ProductController {
             product.getProductName().trim().isEmpty() || 
             product.getProductQuantity() < 0
         ) {
-            redirectAttributes.addAttribute("error", "Product name cannot be empty and quantity must be at least 0");
+            redirectAttributes.addFlashAttribute("error", "Product name cannot be empty and quantity must be at least 0");
             return "redirect:list";
         }
         service.create(product);
