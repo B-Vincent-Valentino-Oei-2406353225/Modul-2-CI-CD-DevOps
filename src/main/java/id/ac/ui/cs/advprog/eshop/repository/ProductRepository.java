@@ -31,7 +31,8 @@ public class ProductRepository {
 
     public void deleteById(String id) {
         Product product = findById(id);
-        if (product != null)
+        if (product != null) {
             productData.remove(product);
+        }
     }
 }
