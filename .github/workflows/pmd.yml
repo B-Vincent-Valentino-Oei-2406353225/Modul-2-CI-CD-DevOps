@@ -3,6 +3,9 @@ name: PMD
 on:
   push:
 
+permissions:
+  contents: read-all
+
 jobs:
   pmd:
     runs-on: ubuntu-latest
