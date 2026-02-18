@@ -12,7 +12,6 @@ on:
   schedule:
     - cron: '38 20 * * 5'
   push:
-    branches: [ "ci-cd" ]
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -73,6 +72,6 @@ jobs:
       # Upload the results to GitHub's code scanning dashboard (optional).
       # Commenting out will disable upload of results to your repo's Code Scanning dashboard
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@f5c2471be782132e47a6e6f9c725e56730d6e9a3 # v3
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
