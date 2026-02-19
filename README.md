@@ -1,3 +1,10 @@
+# Modul 2
+Reflection:
+
+1. Saya telah memperbaiki code quality issue(s) seputar workflow files. Saya melakukan pinning version untuk action-action yang digunakan dalam workflow, seperti checkout dan setup-java, selain itu saya juga merestrict permissions yang digunakan oleh setiap workflow dengan memberikan read-all permission secara eksplisit.
+
+2. Menurut saya, implementasi saat ini sudah memenuhi definisi Continuous Integration. Alasannya, setiap push dan pull_request menjalankan pengujian otomatis, lalu ada pengecekan kualitas kode terpisah melalui PMD sehingga integrasi perubahan tidak hanya dites tetapi juga divalidasi kualitasnya. Dari sisi Continuous Deployment, proses deploy ke Fly.io sudah otomatis ketika ada perubahan pada branch main, jadi CD sudah berjalan. Namun, saya masih dapat meningkatkannya dengan menambahkan dependency pada semua CI, sebelum menjalankan CD, sehingga CD hanya akan berjalan jika semua CI berhasil, ini akan memastikan bahwa hanya kode yang sudah teruji dan tervalidasi yang akan dideploy ke production, sehingga meningkatkan stabilitas aplikasi.
+
 # Modul 1
 
 Reflection 1:
