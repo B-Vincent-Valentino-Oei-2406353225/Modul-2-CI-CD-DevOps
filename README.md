@@ -1,3 +1,25 @@
+# Modul 3
+Reflection:
+1. Daftar hal yang saya ubah untuk menerapkan SOLID:
+- Single Responsibility Principle (SRP): CarController tidak lagi mewarisi ProductController. Keduanya dipisah agar endpoint car dan product tidak bercampur, karena sebenarnya memang tidak saling terhubung. Sehingga, perubahan pada alur mobil tidak memengaruhi alur produk.
+- Open/Closed Principle (OCP): fitur car dikembangkan lewat kelasnya sendiri (CarController, CarService, CarServiceImpl, CarRepository) tanpa perlu mengubah kontrak di modul product. Penambahan behavior baru dilakukan dengan menambah komponen spesifik domain, bukan mengubah kelas lain yang sudah stabil.
+- Liskov Substitution Principle (LSP): penghapusan relasi inheritance CarController extends ProductController menghindari substitusi yang tidak tepat. Secara konsep, controller mobil bukan suatu tipe dari produk, sehingga memisahkan keduanya lebih konsisten terhadap perilaku masing-masing.
+- Interface Segregation Principle (ISP): kontrak layanan dipisah per domain, yakni ProductService dan CarService, sehingga tiap client hanya bergantung pada method yang relevan. Controller mobil tidak perlu mengetahui operasi detail milik service produk.
+- Dependency Inversion Principle (DIP): CarController dan ProductController bergantung pada interface service (CarService dan ProductService), bukan implementasinya. Dependency juga di-inject melalui constructor di controller dan service implementation, sehingga coupling lebih rendah dan testing lebih mudah.
+- Selain itu saya mengubah bagian kode untuk testing agar meninggalkan @MockBean yang sudah deprecated dan menggunakan @MockitoBean untuk membuat mock pada service yang digunakan di controller test, sehingga lebih sesuai dengan best practice.
+
+2. Keuntungan menerapkan SOLID pada project ini:
+- Struktur kode menjadi lebih sederhana dan mudah dipahami karena responsibility masing-masing class terpisah dan jelas.
+- Perubahan fitur lebih aman karena saling terpisah dan memiliki efek yang lebih kecil dibandingkan kode yang highly coupled.
+- Kode lebih mudah dites karena prinsip DIP.
+- Maintainability lebih tinggi karena dependen pada interface dan ada dependency injection.
+
+3. Dampak jika SOLID tidak diterapkan:
+- Suatu Class memiliki banyak responsibility, sehingga lebih kompleks, susah dipahami dan lebih rentan terhadap bug.
+- Kode menjadi tightly coupled, lebih rentan terhadap bug saat ada perubahan, karena perubahan pada satu bagian bisa memengaruhi bagian lain yang tidak terkait.
+- Testing lebih sulit karena dependensi terlalu konkret dan sulit diisolasi.
+- Kode menjadi lebih sulit untuk dimaintain karena perubahan kecil bisa memengaruhi banyak bagian, dan sangat mudah untuk membuat suatu bug secara tidak sengaja.
+
 # Modul 2
 Reflection:
 
