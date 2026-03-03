@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import id.ac.ui.cs.advprog.eshop.service.ProductValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-    private final ProductService productService;
+    private static final String PRODUCT_NOT_FOUND_ERROR = "Product not found";
+    private static final String PRODUCT_LIST_REDIRECT = "redirect:/product/list";
 
-    public ProductController(ProductService productService) {
+    private final ProductService productService;
+    private final ProductValidator productValidator;
+
+    public ProductController(ProductService productService, ProductValidator productValidator) {
         this.productService = productService;
+        this.productValidator = productValidator;
     }
 
     @GetMapping("/create")
@@ -31,13 +37,9 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String createProductPost(@ModelAttribute Product product, Model model, RedirectAttributes redirectAttributes) {
-        // Validation
-        if (product.getProductName() == null || 
-            product.getProductName().trim().isEmpty() || 
-            product.getProductQuantity() < 0
-        ) {
-            redirectAttributes.addFlashAttribute("error", "Product name cannot be empty and quantity must be at least 0");
+    public String createProductPost(@ModelAttribute Product product, RedirectAttributes redirectAttributes) {
+        if (!productValidator.isValid(product)) {
+            redirectAttributes.addFlashAttribute("error", productValidator.getValidationErrorMessage());
             return "redirect:list";
         }
         productService.create(product);
@@ -48,8 +50,8 @@ public class ProductController {
     public String editProductPage(@PathVariable("id") String id, Model model, RedirectAttributes redirectAttributes) {
         Product product = productService.findById(id);
         if (product == null) {
-            redirectAttributes.addFlashAttribute("error", "Product not found");
-            return "redirect:/product/list";
+            redirectAttributes.addFlashAttribute("error", PRODUCT_NOT_FOUND_ERROR);
+            return PRODUCT_LIST_REDIRECT;
         }
         model.addAttribute("product", product);
         return "editProduct";
@@ -57,33 +59,31 @@ public class ProductController {
 
     @PostMapping("/edit/{id}")
     public String editProductPut(@PathVariable("id") String id, @ModelAttribute Product product, RedirectAttributes redirectAttributes) {
-        // Check if product exists
         Product existingProduct = productService.findById(id);
         if (existingProduct == null) {
-            redirectAttributes.addFlashAttribute("error", "Product not found");
-            return "redirect:/product/list";
+            redirectAttributes.addFlashAttribute("error", PRODUCT_NOT_FOUND_ERROR);
+            return PRODUCT_LIST_REDIRECT;
         }
-        
-        // Validation
-        if (product.getProductName() == null || product.getProductName().trim().isEmpty() || product.getProductQuantity() < 0) {
-            redirectAttributes.addFlashAttribute("error", "Product name cannot be empty and quantity must be at least 0");
-            return "redirect:/product/list";
+
+        if (!productValidator.isValid(product)) {
+            redirectAttributes.addFlashAttribute("error", productValidator.getValidationErrorMessage());
+            return PRODUCT_LIST_REDIRECT;
         }
-        
+
         productService.update(id, product);
-        return "redirect:/product/list";
+        return PRODUCT_LIST_REDIRECT;
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable( value = "id", required=false) String id, RedirectAttributes redirectAttributes) {
         Product existingProduct = productService.findById(id);
         if (existingProduct == null) {
-            redirectAttributes.addFlashAttribute("error", "Product not found");
-            return "redirect:/product/list";
+            redirectAttributes.addFlashAttribute("error", PRODUCT_NOT_FOUND_ERROR);
+            return PRODUCT_LIST_REDIRECT;
         }
 
         productService.deleteById(id);
-        return "redirect:/product/list";
+        return PRODUCT_LIST_REDIRECT;
     }
 
     @GetMapping("/list")
